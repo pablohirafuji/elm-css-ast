@@ -1,37 +1,7 @@
-module CssAst.Helpers exposing (identifier, whitespace, toMaybe, anyOrder2, keywordsToType, oneOrMoreCommaList)
+module CssAst.Helpers exposing (whitespace, toMaybe, anyOrder2, keywordsToType, oneOrMoreCommaList)
 
-import Char
 import Parser exposing (Parser, zeroOrMore, oneOrMore, ignore, Count(..), source, (|.), (|=), oneOf, succeed, map, keyword, symbol, delayedCommit, repeat)
 import Parser.LanguageKit as LanguageKit
-
-
--- https://www.w3.org/TR/css-syntax-3/#typedef-ident-token
-
-
-identifier : Parser String
-identifier =
-    oneOf
-        [ ignore (Exactly 1) ((==) '-')
-            |. identifierHelp
-        , identifierHelp
-        ]
-        |> source
-
-
-identifierHelp : Parser ()
-identifierHelp =
-    ignore (Exactly 1) isIdentifierStartChar
-        |. ignore zeroOrMore isIdentifierBodyChar
-
-
-isIdentifierStartChar : Char -> Bool
-isIdentifierStartChar c =
-    Char.isUpper c || Char.isLower c || c == '_' || c == '\\' || Char.toCode c > 127
-
-
-isIdentifierBodyChar : Char -> Bool
-isIdentifierBodyChar c =
-    isIdentifierStartChar c || Char.isDigit c || c == '-'
 
 
 whitespace : Parser ()

@@ -1,14 +1,44 @@
 module CssAst.Values exposing (..)
 
+import Char
 import Dict exposing (Dict)
-import Parser exposing (Parser, symbol, oneOf, map, andThen, succeed, delayedCommitMap)
-import CssAst.Helpers exposing (identifier)
+import Parser exposing (Parser, symbol, oneOf, map, andThen, succeed, delayedCommitMap, ignore, Count(..), source, zeroOrMore, (|.))
 
 
 type WideKeyword
     = Inherit
     | Initial
     | Unset
+
+
+
+-- https://www.w3.org/TR/css-syntax-3/#typedef-ident-token
+
+
+identifier : Parser String
+identifier =
+    oneOf
+        [ ignore (Exactly 1) ((==) '-')
+            |. identifierHelp
+        , identifierHelp
+        ]
+        |> source
+
+
+identifierHelp : Parser ()
+identifierHelp =
+    ignore (Exactly 1) isIdentifierStartChar
+        |. ignore zeroOrMore isIdentifierBodyChar
+
+
+isIdentifierStartChar : Char -> Bool
+isIdentifierStartChar c =
+    Char.isUpper c || Char.isLower c || c == '_' || c == '\\' || Char.toCode c > 127
+
+
+isIdentifierBodyChar : Char -> Bool
+isIdentifierBodyChar c =
+    isIdentifierStartChar c || Char.isDigit c || c == '-'
 
 
 integer : Parser Int

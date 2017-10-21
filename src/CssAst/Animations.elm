@@ -21,8 +21,8 @@ module CssAst.Animations
 -}
 
 import Parser exposing (Parser, oneOf, zeroOrMore, oneOrMore, ignore, symbol, keyword, (|.), (|=), source, ignoreUntil, keep, Count(..), Error, map, andThen, repeat, succeed, delayedCommit, fail, map2)
-import CssAst.Helpers exposing (whitespace, keywordsToType, identifier, oneOrMoreCommaList, toMaybe)
-import CssAst.Values exposing (Time, time, number, integer)
+import CssAst.Helpers exposing (whitespace, keywordsToType, oneOrMoreCommaList, toMaybe)
+import CssAst.Values exposing (Time, identifier, time, number, integer)
 
 
 {-| The Animation type.
