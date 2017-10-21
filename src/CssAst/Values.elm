@@ -12,13 +12,15 @@ type WideKeyword
 
 
 
--- https://www.w3.org/TR/css-syntax-3/#typedef-ident-token
+-- https://drafts.csswg.org/css-syntax-3/#typedef-ident-token
 
 
 identifier : Parser String
 identifier =
     oneOf
-        [ ignore (Exactly 1) ((==) '-')
+        [ symbol "--"
+            |. ignore zeroOrMore isIdentifierBodyChar
+        , symbol "-"
             |. identifierHelp
         , identifierHelp
         ]
