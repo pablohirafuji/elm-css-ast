@@ -7,8 +7,11 @@ import CssAst.Helpers exposing (whitespace)
 import CssAst.Values exposing (identifier)
 import CssAst.Align as Align exposing (Align)
 import CssAst.Animations as Animations exposing (Animation)
+import CssAst.Backgrounds as Bg exposing (Background)
 import CssAst.Box as Box exposing (Box)
 import CssAst.Break as Break exposing (Break)
+import CssAst.Color as Color exposing (Color)
+import CssAst.Images as Images exposing (Image)
 
 
 ---- TYPES ----
@@ -276,9 +279,12 @@ attributeMatcher =
 
 type Declaration
     = Align Align
-    | Animations Animation
+    | Animation Animation
+    | Background Background
     | Box Box
     | Break Break
+    | Color Color
+    | Image Image
     | Custom String String
 
 
@@ -302,18 +308,18 @@ declaration =
                 case Dict.get n declarationsDict of
                     Just parser ->
                         oneOf
-                            [ parser
-                            , oneOf
+                            [ oneOf
                                 [ keyword "inherit"
                                 , keyword "initial"
                                 , keyword "unset"
                                 ]
                                 |> source
                                 |> map (Custom n)
+                            , parser
                             ]
 
                     Nothing ->
-                        fail <| "Invalid property: `" ++ n ++ "`."
+                        fail ("Invalid property: `" ++ n ++ "`.")
             )
 
 
@@ -334,6 +340,9 @@ declarationsDict =
 declarations : List ( String, Parser Declaration )
 declarations =
     List.map (Tuple.mapSecond (map Align)) Align.declarations
-        ++ List.map (Tuple.mapSecond (map Animations)) Animations.declarations
+        ++ List.map (Tuple.mapSecond (map Animation)) Animations.declarations
+        ++ List.map (Tuple.mapSecond (map Background)) Bg.declarations
         ++ List.map (Tuple.mapSecond (map Box)) Box.declarations
         ++ List.map (Tuple.mapSecond (map Break)) Break.declarations
+        ++ List.map (Tuple.mapSecond (map Color)) Color.declarations
+        ++ List.map (Tuple.mapSecond (map Image)) Images.declarations

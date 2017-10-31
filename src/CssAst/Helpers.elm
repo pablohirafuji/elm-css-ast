@@ -1,16 +1,30 @@
-module CssAst.Helpers exposing (whitespace, toMaybe, anyOrder2, keywordsToType, oneOrMoreCommaList)
+module CssAst.Helpers exposing (whitespace, oneOrMoreWhitespace, toMaybe, anyOrder2, keywordsToType, oneOrMoreCommaList, isWhitespace, resultToParser)
 
-import Parser exposing (Parser, zeroOrMore, oneOrMore, ignore, Count(..), source, (|.), (|=), oneOf, succeed, map, keyword, symbol, delayedCommit, repeat)
-import Parser.LanguageKit as LanguageKit
+import Set exposing (Set)
+import Parser exposing (Parser, zeroOrMore, oneOrMore, ignore, Count(..), source, (|.), (|=), oneOf, succeed, map, keyword, symbol, delayedCommit, repeat, fail)
 
 
 whitespace : Parser ()
 whitespace =
-    LanguageKit.whitespace
-        { allowTabs = False
-        , lineComment = LanguageKit.NoLineComment
-        , multiComment = LanguageKit.UnnestableComment "/*" "*/"
-        }
+    whitespaceHelp
+        |> repeat zeroOrMore
+        |> map (always ())
+
+
+oneOrMoreWhitespace : Parser ()
+oneOrMoreWhitespace =
+    whitespaceHelp
+        |> repeat oneOrMore
+        |> map (always ())
+
+
+whitespaceHelp : Parser ()
+whitespaceHelp =
+    oneOf
+        [ symbol "/*"
+            |. Parser.ignoreUntil "*/"
+        , ignore oneOrMore isWhitespace
+        ]
 
 
 toMaybe : Parser a -> Parser (Maybe a)
@@ -24,14 +38,14 @@ toMaybe parser =
 anyOrder2 : (b -> c -> a) -> Parser b -> Parser c -> Parser a
 anyOrder2 type_ b c =
     oneOf
-        [ succeed (\c_ b_ -> type_ b_ c_)
-            |= c
-            |. whitespace
-            |= b
-        , succeed type_
+        [ succeed type_
             |= b
             |. whitespace
             |= c
+        , succeed (\c_ b_ -> type_ b_ c_)
+            |= c
+            |. whitespace
+            |= b
         ]
 
 
@@ -55,16 +69,25 @@ oneOrMoreCommaList fn n =
             )
 
 
+isWhitespace : Char -> Bool
+isWhitespace c =
+    Set.member c whitespaceSet
 
---zeroOrMoreWhitespaces : Parser ()
---zeroOrMoreWhitespaces =
---    ignore zeroOrMore isWhitespace
---oneOrMoreWhitespaces : Parser ()
---oneOrMoreWhitespaces =
---    ignore oneOrMore isWhitespace
---isWhitespace : Char -> Bool
---isWhitespace c =
---    Set.member c whitespaceSet
---whitespaceSet : Set Char
---whitespaceSet =
---    Set.fromList [ ' ', '\n', '\t', '\x0D', '\x0C' ]
+
+whitespaceSet : Set Char
+whitespaceSet =
+    Set.fromList [ ' ', '\n', '\t', '\x0D', '\x0C' ]
+
+
+
+{- When validating parsers, using Result enable validating only the AST in the future. This function transform a result into a parser. -}
+
+
+resultToParser : Result String a -> Parser a
+resultToParser result =
+    case result of
+        Result.Err err ->
+            fail err
+
+        Result.Ok ok ->
+            succeed ok

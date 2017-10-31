@@ -81,8 +81,6 @@ declarations =
 Value definition syntax:
 `<time> || <single-timing-function> || <time> || <single-animation-iteration-count> || <single-animation-direction> || <single-animation-fill-mode> || <single-animation-play-state> || [ none | <keyframes-name> ]`
 
-*Help wanted*: How to do invalid state impossible? If everything is `Nothing`, it's an invalid state. The parser fails if everything is `Nothing`, but it's still possible to represent an invalid state.
-
 -}
 type alias SingleAnimation =
     { duration : Maybe Time
