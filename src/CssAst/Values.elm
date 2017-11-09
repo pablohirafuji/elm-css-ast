@@ -6,6 +6,8 @@ import Parser exposing (Parser, symbol, oneOf, map, andThen, succeed, delayedCom
 import CssAst.Helpers exposing (isWhitespace, whitespace, keywordsToType, toMaybe, resultToParser)
 
 
+{-| The [CSS-wide keywords](https://drafts.csswg.org/css-values-4/#common-keywords) type.
+-}
 type WideKeyword
     = Inherit
     | Initial

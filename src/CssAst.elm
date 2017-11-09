@@ -10,7 +10,9 @@ import CssAst.Animations as Animations exposing (Animation)
 import CssAst.Backgrounds as Bg exposing (Background)
 import CssAst.Box as Box exposing (Box)
 import CssAst.Break as Break exposing (Break)
+import CssAst.Cascade as Cascade exposing (Cascade)
 import CssAst.Color as Color exposing (Color)
+import CssAst.Contain as Contain exposing (Contain)
 import CssAst.Images as Images exposing (Image)
 
 
@@ -283,7 +285,9 @@ type Declaration
     | Background Background
     | Box Box
     | Break Break
+    | Cascade Cascade
     | Color Color
+    | Contain Contain
     | Image Image
     | Custom String String
 
@@ -344,5 +348,7 @@ declarations =
         ++ List.map (Tuple.mapSecond (map Background)) Bg.declarations
         ++ List.map (Tuple.mapSecond (map Box)) Box.declarations
         ++ List.map (Tuple.mapSecond (map Break)) Break.declarations
+        ++ List.map (Tuple.mapSecond (map Cascade)) Cascade.declarations
         ++ List.map (Tuple.mapSecond (map Color)) Color.declarations
+        ++ List.map (Tuple.mapSecond (map Contain)) Contain.declarations
         ++ List.map (Tuple.mapSecond (map Image)) Images.declarations
