@@ -14,6 +14,8 @@ import CssAst.Cascade as Cascade exposing (Cascade)
 import CssAst.Color as Color exposing (Color)
 import CssAst.Contain as Contain exposing (Contain)
 import CssAst.Content as Content exposing (Content)
+import CssAst.Display as Display
+import CssAst.Exclusions as Exclusions
 import CssAst.Images as Images exposing (Image)
 
 
@@ -241,9 +243,9 @@ attributeSelector =
             |. whitespace
             |. symbol "]"
         , symbol "::"
-            |> map (always ( "as", Just ( Equal, "dfdf", CaseSensitive ) ))
+            |> map (always ( "as", Just ( Equal, "TODO", CaseSensitive ) ))
         , symbol ":"
-            |> map (always ( "as", Just ( Equal, "dfdf", CaseSensitive ) ))
+            |> map (always ( "as", Just ( Equal, "TODO", CaseSensitive ) ))
         ]
 
 
@@ -290,6 +292,8 @@ type Declaration
     | Color Color
     | Contain Contain
     | Content Content
+    | Display Display.Declaration
+    | Exclusion Exclusions.Declaration
     | Image Image
     | Custom String String
 
@@ -354,4 +358,6 @@ declarations =
         ++ List.map (Tuple.mapSecond (map Color)) Color.declarations
         ++ List.map (Tuple.mapSecond (map Contain)) Contain.declarations
         ++ List.map (Tuple.mapSecond (map Content)) Content.declarations
+        ++ List.map (Tuple.mapSecond (map Display)) Display.declarations
+        ++ List.map (Tuple.mapSecond (map Exclusion)) Exclusions.declarations
         ++ List.map (Tuple.mapSecond (map Image)) Images.declarations
