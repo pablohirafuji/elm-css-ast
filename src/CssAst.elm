@@ -13,6 +13,7 @@ import CssAst.Break as Break exposing (Break)
 import CssAst.Cascade as Cascade exposing (Cascade)
 import CssAst.Color as Color exposing (Color)
 import CssAst.Contain as Contain exposing (Contain)
+import CssAst.Content as Content exposing (Content)
 import CssAst.Images as Images exposing (Image)
 
 
@@ -288,6 +289,7 @@ type Declaration
     | Cascade Cascade
     | Color Color
     | Contain Contain
+    | Content Content
     | Image Image
     | Custom String String
 
@@ -351,4 +353,5 @@ declarations =
         ++ List.map (Tuple.mapSecond (map Cascade)) Cascade.declarations
         ++ List.map (Tuple.mapSecond (map Color)) Color.declarations
         ++ List.map (Tuple.mapSecond (map Contain)) Contain.declarations
+        ++ List.map (Tuple.mapSecond (map Content)) Content.declarations
         ++ List.map (Tuple.mapSecond (map Image)) Images.declarations

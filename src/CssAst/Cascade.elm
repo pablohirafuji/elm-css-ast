@@ -2,17 +2,17 @@ module CssAst.Cascade
     exposing
         ( Cascade(..)
         , declarations
+        , All(..)
         )
 
 {-| [CSS Cascading and Inheritance](https://drafts.csswg.org/css-cascade-4/)
 
-@docs Cascade, declarations
+@docs Cascade, All, declarations
 
 -}
 
 import Parser exposing (Parser, oneOf, zeroOrMore, oneOrMore, ignore, symbol, keyword, (|.), (|=), source, ignoreUntil, keep, Count(..), Error, map, andThen, repeat, succeed, delayedCommit, fail, map2)
 import CssAst.Helpers exposing (whitespace, keywordsToType, oneOrMoreCommaList, toMaybe)
-import CssAst.Values as V
 
 
 {-| The Cascade type.
