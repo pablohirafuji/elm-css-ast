@@ -31,15 +31,15 @@ import CssAst.Values exposing (Time, identifier, time, number, integer)
 
 -}
 type Animation
-    = Animation SingleAnimation (List SingleAnimation)
-    | AnimationDelay Time (List Time)
-    | AnimationDirection SingleAnimationDirection (List SingleAnimationDirection)
-    | AnimationDuration Time (List Time)
-    | AnimationFillMode SingleAnimationFillMode (List SingleAnimationFillMode)
-    | AnimationIterationCount SingleAnimationIterationCount (List SingleAnimationIterationCount)
-    | AnimationName AnimationName (List AnimationName)
-    | AnimationPlayState SingleAnimationPlayState (List SingleAnimationPlayState)
-    | AnimationTimingFunction SingleTimingFunction (List SingleTimingFunction)
+    = Animation (List SingleAnimation)
+    | AnimationDelay (List Time)
+    | AnimationDirection (List SingleAnimationDirection)
+    | AnimationDuration (List Time)
+    | AnimationFillMode (List SingleAnimationFillMode)
+    | AnimationIterationCount (List SingleAnimationIterationCount)
+    | AnimationName (List AnimationName)
+    | AnimationPlayState (List SingleAnimationPlayState)
+    | AnimationTimingFunction (List SingleTimingFunction)
 
 
 {-| Exposing for internal use only.
@@ -47,31 +47,31 @@ type Animation
 declarations : List ( String, Parser Animation )
 declarations =
     [ ( "animation"
-      , oneOrMoreCommaList Animation singleAnimation
+      , oneOrMoreCommaList singleAnimation |> map Animation
       )
     , ( "animation-delay"
-      , oneOrMoreCommaList AnimationDelay time
+      , oneOrMoreCommaList time |> map AnimationDelay
       )
     , ( "animation-direction"
-      , oneOrMoreCommaList AnimationDirection singleAnimationDirection
+      , oneOrMoreCommaList singleAnimationDirection |> map AnimationDirection
       )
     , ( "animation-duration"
-      , oneOrMoreCommaList AnimationDuration time
+      , oneOrMoreCommaList time |> map AnimationDuration
       )
     , ( "animation-fill-mode"
-      , oneOrMoreCommaList AnimationFillMode singleAnimationFillMode
+      , oneOrMoreCommaList singleAnimationFillMode |> map AnimationFillMode
       )
     , ( "animation-iteration-count"
-      , oneOrMoreCommaList AnimationIterationCount singleAnimationIterationCount
+      , oneOrMoreCommaList singleAnimationIterationCount |> map AnimationIterationCount
       )
     , ( "animation-name"
-      , oneOrMoreCommaList AnimationName animationName
+      , oneOrMoreCommaList animationName |> map AnimationName
       )
     , ( "animation-play-state"
-      , oneOrMoreCommaList AnimationPlayState singleAnimationPlayState
+      , oneOrMoreCommaList singleAnimationPlayState |> map AnimationPlayState
       )
     , ( "animation-timing-function"
-      , oneOrMoreCommaList AnimationTimingFunction singleTimingFunction
+      , oneOrMoreCommaList singleTimingFunction |> map AnimationTimingFunction
       )
     ]
 
@@ -112,7 +112,7 @@ singleAnimationHelp nsHead nsTail n =
                 ]
 
         [] ->
-            if n.duration == Nothing && n.timingFunction == Nothing && n.delay == Nothing && n.iterationCount == Nothing && n.direction == Nothing && n.fillMode == Nothing && n.playState == Nothing && n.name == Nothing then
+            if n == emptySingleAnimation then
                 fail "Empty `animation` property value."
             else
                 succeed n

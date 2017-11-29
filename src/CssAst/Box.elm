@@ -4,6 +4,7 @@ module CssAst.Box
         , declarations
         , MarginValue(..)
         , Width(..)
+        , width
         , Height(..)
         , MinWidthOrHeight(..)
         , MaxWidthOrHeight(..)
@@ -21,7 +22,7 @@ module CssAst.Box
 
 {-| [CSS basic box model](https://drafts.csswg.org/css-box-3/)
 
-@docs Box,MarginValue,Width,Height,MinWidthOrHeight,MaxWidthOrHeight,MinMaxWHBoxValue,Float,Clear,ClearAfter,OverflowXY,Visibility,FloatDisplace,FloatDisplace3,FloatDisplace3Block, IndentEdgeReset, declarations
+@docs Box,MarginValue,Width,Height,MinWidthOrHeight,MaxWidthOrHeight,MinMaxWHBoxValue,Float,Clear,ClearAfter,OverflowXY,Visibility,FloatDisplace,FloatDisplace3,FloatDisplace3Block, IndentEdgeReset, declarations, width
 
 -}
 
@@ -160,6 +161,8 @@ type Width
     | WAuto
 
 
+{-| Exposing for internal use only.
+-}
 width : Parser Width
 width =
     oneOf

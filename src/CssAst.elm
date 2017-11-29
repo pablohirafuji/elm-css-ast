@@ -16,6 +16,7 @@ import CssAst.Contain as Contain exposing (Contain)
 import CssAst.Content as Content exposing (Content)
 import CssAst.Display as Display
 import CssAst.Exclusions as Exclusions
+import CssAst.Flexbox as Flexbox
 import CssAst.Images as Images exposing (Image)
 
 
@@ -294,6 +295,7 @@ type Declaration
     | Content Content
     | Display Display.Declaration
     | Exclusion Exclusions.Declaration
+    | Flexbox Flexbox.Declaration
     | Image Image
     | Custom String String
 
@@ -360,4 +362,5 @@ declarations =
         ++ List.map (Tuple.mapSecond (map Content)) Content.declarations
         ++ List.map (Tuple.mapSecond (map Display)) Display.declarations
         ++ List.map (Tuple.mapSecond (map Exclusion)) Exclusions.declarations
+        ++ List.map (Tuple.mapSecond (map Flexbox)) Flexbox.declarations
         ++ List.map (Tuple.mapSecond (map Image)) Images.declarations

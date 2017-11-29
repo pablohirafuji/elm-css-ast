@@ -205,17 +205,18 @@ Value definition syntax:
 -}
 type StringSet
     = NoSet
-    | Set ( String, List String ) (List ( String, List String ))
+    | Set (List ( String, List String ))
 
 
 stringSet : Parser StringSet
 stringSet =
     oneOf
         [ keyword "none" |> map (always NoSet)
-        , oneOrMoreCommaList Set
+        , oneOrMoreCommaList
             (succeed (,)
                 |= V.identifier
                 |. whitespace
                 |= (repeat oneOrMore (V.string |. whitespace))
             )
+            |> map Set
         ]

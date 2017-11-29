@@ -44,15 +44,15 @@ import CssAst.Values as V exposing (Side(..))
 
 -}
 type Background
-    = Background FinalBgLayer (List FinalBgLayer)
-    | Attachment Attachment (List Attachment)
-    | Clip Box (List Box)
+    = Background (List FinalBgLayer)
+    | Attachment (List Attachment)
+    | Clip (List Box)
     | Color Color.Value
-    | Image BgImage (List BgImage)
-    | Origin Box (List Box)
-    | Position BgPosition (List BgPosition)
-    | Repeat RepeatStyle (List RepeatStyle)
-    | Size BgSize (List BgSize)
+    | Image (List BgImage)
+    | Origin (List Box)
+    | Position (List BgPosition)
+    | Repeat (List RepeatStyle)
+    | Size (List BgSize)
     | Border BorderSH
     | BorderDir Side BorderSH
     | BorderColor Color.Value (Maybe Color.Value) (Maybe Color.Value) (Maybe Color.Value)
@@ -76,18 +76,18 @@ type Background
 declarations : List ( String, Parser Background )
 declarations =
     [ ( "background"
-      , oneOrMoreCommaList Background finalBgLayer
+      , oneOrMoreCommaList finalBgLayer |> map Background
       )
     , ( "background-attachment"
-      , oneOrMoreCommaList Attachment attachment
+      , oneOrMoreCommaList attachment |> map Attachment
       )
-    , ( "background-clip", oneOrMoreCommaList Clip box )
+    , ( "background-clip", oneOrMoreCommaList box |> map Clip )
     , ( "background-color", map Color Color.value )
-    , ( "background-image", oneOrMoreCommaList Image bgImage )
-    , ( "background-origin", oneOrMoreCommaList Origin box )
-    , ( "background-position", oneOrMoreCommaList Position bgPosition )
-    , ( "background-repeat", oneOrMoreCommaList Repeat repeatStyle )
-    , ( "background-size", oneOrMoreCommaList Size bgSize )
+    , ( "background-image", oneOrMoreCommaList bgImage |> map Image )
+    , ( "background-origin", oneOrMoreCommaList box |> map Origin )
+    , ( "background-position", oneOrMoreCommaList bgPosition |> map Position )
+    , ( "background-repeat", oneOrMoreCommaList repeatStyle |> map Repeat )
+    , ( "background-size", oneOrMoreCommaList bgSize |> map Size )
     , ( "border", map Border (borderSH "border") )
     , ( "border-top", map (BorderDir Top) (borderSH "border-top") )
     , ( "border-right", map (BorderDir Right) (borderSH "border-right") )

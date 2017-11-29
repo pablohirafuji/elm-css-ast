@@ -1,4 +1,15 @@
-module CssAst.Helpers exposing (whitespace, oneOrMoreWhitespace, toMaybe, anyOrder2, keywordsToType, oneOrMoreCommaList, isWhitespace, resultToParser)
+module CssAst.Helpers
+    exposing
+        ( whitespace
+        , oneOrMoreWhitespace
+        , toMaybe
+        , anyOrder2
+        , keywordsToType
+        , oneOrMoreCommaList
+        , isWhitespace
+        , resultToParser
+        , function
+        )
 
 import Set exposing (Set)
 import Parser exposing (Parser, zeroOrMore, oneOrMore, ignore, Count(..), source, (|.), (|=), oneOf, succeed, map, keyword, symbol, delayedCommit, repeat, fail)
@@ -55,9 +66,9 @@ keywordsToType =
         >> oneOf
 
 
-oneOrMoreCommaList : (a -> List a -> b) -> Parser a -> Parser b
-oneOrMoreCommaList fn n =
-    succeed fn
+oneOrMoreCommaList : Parser a -> Parser (List a)
+oneOrMoreCommaList n =
+    succeed (::)
         |= n
         |. whitespace
         |= repeat zeroOrMore
@@ -91,3 +102,13 @@ resultToParser result =
 
         Result.Ok ok ->
             succeed ok
+
+
+function : String -> Parser a -> Parser a
+function str parser =
+    succeed identity
+        |. keyword (str ++ "(")
+        |. whitespace
+        |= parser
+        |. whitespace
+        |. symbol ")"
